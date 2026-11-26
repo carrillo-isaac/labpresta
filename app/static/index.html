@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LabPresta - Préstamos de laboratorio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'baltic-blue': {
+              50:'#ecf2f9',100:'#d9e6f2',200:'#b3cce6',300:'#8cb2d9',400:'#6699cc',
+              500:'#407fbf',600:'#336699',700:'#264c73',800:'#19334d',900:'#0d1926',950:'#09121b'
+            },
+            'sky-reflection': {
+              50:'#ecf4f9',100:'#d8e9f3',200:'#b2d4e6',300:'#8bbeda',400:'#65a9cd',
+              500:'#3e93c1',600:'#32769a',700:'#255874',800:'#193b4d',900:'#0c1d27',950:'#09151b'
+            },
+            'charcoal-blue': {
+              50:'#eef3f6',100:'#dee7ed',200:'#bdd0db',300:'#9cb8c9',400:'#7aa0b8',
+              500:'#5988a6',600:'#476d85',700:'#365263',800:'#243742',900:'#121b21',950:'#0c1317'
+            },
+            'light-green': {
+              50:'#edfaeb',100:'#daf5d6',200:'#b6ebad',300:'#91e085',400:'#6cd65c',
+              500:'#47cc33',600:'#39a329',700:'#2b7a1f',800:'#1d5214',900:'#0e290a',950:'#0a1d07'
+            },
+            'frosted-mint': {
+              50:'#eafaeb',100:'#d5f6d7',200:'#abedb0',300:'#82e388',400:'#58da60',
+              500:'#2ed139',600:'#25a72d',700:'#1c7d22',800:'#125417',900:'#092a0b',950:'#061d08'
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-charcoal-blue-50 text-charcoal-blue-900 font-sans min-h-screen">
+  <header class="bg-baltic-blue-800 text-white">
+    <div class="max-w-5xl mx-auto px-4 py-6">
+      <h1 class="text-2xl font-bold">Préstamos de laboratorio</h1>
+      <p class="text-baltic-blue-100 text-sm mt-1">LabPresta · Registro de préstamos de equipos del laboratorio de informática</p>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 py-8 space-y-8">
+    <!-- Contadores -->
+    <section class="grid grid-cols-1 sm:grid-cols-3 gap-4" aria-label="Resumen">
+      <div class="bg-white border border-charcoal-blue-100 rounded-xl shadow-sm p-5">
+        <p class="text-sm text-charcoal-blue-600">Total</p>
+        <p id="total" class="text-3xl font-bold text-baltic-blue-700">0</p>
+      </div>
+      <div class="bg-white border border-charcoal-blue-100 rounded-xl shadow-sm p-5">
+        <p class="text-sm text-charcoal-blue-600">Activos</p>
+        <p id="activos" class="text-3xl font-bold text-sky-reflection-700">0</p>
+      </div>
+      <div class="bg-white border border-charcoal-blue-100 rounded-xl shadow-sm p-5">
+        <p class="text-sm text-charcoal-blue-600">Devueltos</p>
+        <p id="devueltos" class="text-3xl font-bold text-light-green-700">0</p>
+      </div>
+    </section>
+
+    <!-- Formulario -->
+    <section class="bg-white border border-charcoal-blue-100 rounded-xl shadow-sm p-5">
+      <h2 class="text-lg font-semibold mb-4">Registrar préstamo</h2>
+      <form id="form-prestamo" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end" novalidate>
+        <div>
+          <label for="equipo" class="block text-sm text-charcoal-blue-600 mb-1">Equipo</label>
+          <input id="equipo" name="equipo" type="text" maxlength="100" required placeholder="Laptop Dell 01"
+            class="w-full rounded-lg border border-charcoal-blue-200 px-3 py-2 outline-none focus:ring-2 focus:ring-sky-reflection-400 focus:border-sky-reflection-500">
+        </div>
+        <div>
+          <label for="responsable" class="block text-sm text-charcoal-blue-600 mb-1">Responsable</label>
+          <input id="responsable" name="responsable" type="text" maxlength="100" required placeholder="María Pérez"
+            class="w-full rounded-lg border border-charcoal-blue-200 px-3 py-2 outline-none focus:ring-2 focus:ring-sky-reflection-400 focus:border-sky-reflection-500">
+        </div>
+        <div>
+          <label for="fecha" class="block text-sm text-charcoal-blue-600 mb-1">Fecha</label>
+          <input id="fecha" name="fecha" type="date" required
+            class="w-full rounded-lg border border-charcoal-blue-200 px-3 py-2 outline-none focus:ring-2 focus:ring-sky-reflection-400 focus:border-sky-reflection-500">
+        </div>
+        <button type="submit"
+          class="rounded-lg px-4 py-2 font-medium transition-colors bg-baltic-blue-600 hover:bg-baltic-blue-700 text-white focus:outline-none focus:ring-2 focus:ring-sky-reflection-400">
+          Registrar
+        </button>
+      </form>
+      <div id="mensaje" class="hidden mt-4 rounded-lg border px-4 py-3 text-sm" role="status" aria-live="polite"></div>
+    </section>
+
+    <!-- Búsqueda + tabla -->
+    <section class="bg-white border border-charcoal-blue-100 rounded-xl shadow-sm p-5 space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <h2 class="text-lg font-semibold">Préstamos</h2>
+        <div class="sm:w-72">
+          <label for="buscar" class="sr-only">Buscar por equipo o responsable</label>
+          <input id="buscar" type="search" placeholder="Buscar por equipo o responsable"
+            class="w-full rounded-lg border border-charcoal-blue-200 px-3 py-2 outline-none focus:ring-2 focus:ring-sky-reflection-400 focus:border-sky-reflection-500">
+        </div>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm text-left">
+          <thead class="bg-baltic-blue-50 text-baltic-blue-800">
+            <tr>
+              <th class="px-4 py-3 font-semibold">Equipo</th>
+              <th class="px-4 py-3 font-semibold">Responsable</th>
+              <th class="px-4 py-3 font-semibold">Fecha préstamo</th>
+              <th class="px-4 py-3 font-semibold">Estado</th>
+              <th class="px-4 py-3 font-semibold">Acción</th>
+            </tr>
+          </thead>
+          <tbody id="tabla-body" class="divide-y divide-charcoal-blue-100"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>
